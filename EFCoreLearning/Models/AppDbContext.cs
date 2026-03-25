@@ -31,6 +31,8 @@ namespace EFCoreLearning.Models
 
         public DbSet<BookPrice> BookPrices { get; set; }
 
+        public DbSet<Author> Authors { get; set; }
+
         
     }
     

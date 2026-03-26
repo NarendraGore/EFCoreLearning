@@ -3,6 +3,7 @@ using EFCoreLearning.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace EFCoreLearning.Controllers
 {
@@ -23,6 +24,41 @@ namespace EFCoreLearning.Controllers
         {
             var result = await _appDbContext.Books.ToListAsync();
             return Ok(result);
+        }
+
+        //Eager Loading
+        [HttpGet("eagerbooks")]
+        public async Task<IActionResult> GetBookEagerLoading() {
+
+            var result = await _appDbContext.Books
+                .Include(x=>x.Language)
+                .Include(x => x.Author)
+                .ToArrayAsync();
+            return Ok(result);
+        }
+
+        //[HttpGet("language")]
+        //public async Task<IActionResult> GetLanguage() {
+
+        //    var language = await _appDbContext.Languages.
+        //        Include(x=>x.Books).
+        //        ToListAsync();
+        //    return Ok(language);
+        //}
+
+
+        [HttpGet("books")]
+        public async Task<IActionResult> GetBookAuthor() {
+            var book = await _appDbContext.Books.Select(x => new 
+            //Book
+            {
+                Id = x.Id,
+                Title = x.Title,
+               Language = x.Language ,
+               Author = x.Author != null ? x.Author.Name : "NA"
+            }).ToListAsync();
+                return Ok(book);
+        
         }
 
         [HttpPost("")]
